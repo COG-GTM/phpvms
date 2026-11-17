@@ -79,7 +79,9 @@ class UserResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        // User::ident() and User::atc() read the airline, and the list renders both.
         return parent::getEloquentQuery()
+            ->with('airline')
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
