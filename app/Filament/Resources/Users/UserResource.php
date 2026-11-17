@@ -79,7 +79,9 @@ class UserResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
+        // The list's ident column and the edit page's callsign both read the airline.
         return parent::getEloquentQuery()
+            ->with('airline')
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
