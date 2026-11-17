@@ -79,7 +79,7 @@ class UserResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        // User::ident() and User::atc() read the airline, and the list renders both.
+        // The list's ident column and the edit page's callsign both read the airline.
         return parent::getEloquentQuery()
             ->with('airline')
             ->withoutGlobalScopes([
