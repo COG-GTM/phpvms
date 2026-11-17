@@ -671,7 +671,7 @@ pireps:
     block_fuel: 20000
     fuel_used: 10000
     state: 1 # accepted
-    status: 0
+    status: ARR
     source: 1
     flight_type: J
     route: KAUS SID TNV J87 IAH J2 LCH J22 MEI J239 ATL J52 AJFEB J14 BYJAC Q60 JAXSN J14 COLIN J61 HUBBS J55 SIE STAR KJFK
@@ -741,7 +741,7 @@ pireps:
     fuel_used: 20000
     flight_time: 180 # 6 hours
     state: 0
-    status: 0
+    status: ARR
     source: 1
     flight_type: J
     route: KAUS SID TNV J87 IAH J2 LCH J22 MEI J239 ATL J52 AJFEB J14 BYJAC Q60 JAXSN J14 COLIN J61 HUBBS J55 SIE STAR KJFK

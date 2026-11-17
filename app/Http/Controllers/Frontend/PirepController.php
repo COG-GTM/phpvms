@@ -232,7 +232,7 @@ class PirepController extends Controller
         if (empty($pirep)) {
             Flash::error('Pirep not found');
 
-            return redirect(route('frontend.pirep.index'));
+            return redirect(route('frontend.pireps.index'));
         }
 
         $map_features = $this->geoSvc->pirepGeoJson($pirep);
@@ -504,9 +504,7 @@ class PirepController extends Controller
 
         // set the custom fields
         foreach ($pirep->fields as $field) {
-            if ($field->slug === null) {
-                $field->slug = Str::slug($field->name);
-            }
+            $field->slug ??= Str::slug($field->name);
 
             $field_name = 'field_'.$field->slug;
             $pirep->{$field_name} = $field->value;
