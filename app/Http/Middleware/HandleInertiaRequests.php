@@ -11,7 +11,6 @@ use App\Support\Skylight\Facades\Skylight;
 use Igaster\LaravelTheme\Facades\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Inertia\Middleware;
 use Override;
 
@@ -145,17 +144,18 @@ class HandleInertiaRequests extends Middleware
     {
         $messages = $request->session()->get('flash_notification');
 
-        if (!$messages instanceof Collection) {
+        if (!is_iterable($messages)) {
             return null;
         }
 
-        $match = $messages->first(
-            fn (mixed $message): bool => is_object($message)
-                && ($message->level ?? null) === $level
-                && filled($message->message ?? null),
+        // The notifier flashes a Collection of Message objects, but sessions are
+        // stored as JSON, so the next request reads them back as plain arrays.
+        $match = collect($messages)->first(
+            fn (mixed $message): bool => data_get($message, 'level') === $level
+                && filled(data_get($message, 'message')),
         );
 
-        return $match === null ? null : (string) $match->message;
+        return $match === null ? null : (string) data_get($match, 'message');
     }
 
     /**
