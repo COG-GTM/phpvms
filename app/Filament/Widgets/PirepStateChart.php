@@ -63,10 +63,14 @@ class PirepStateChart extends Widget implements DynamicWidget
                 fn (Builder $query): Builder => $query->whereIn('airline_id', $airlines),
             );
 
+        // Counted in the database: plucking `state` through Eloquent builds a
+        // model per row just to cast it, which dominates the dashboard load.
         $counts = $query
-            ->pluck('state')
-            ->map(fn (PirepState $state): int => $state->value)
-            ->countBy();
+            ->toBase()
+            ->selectRaw('state, COUNT(*) AS aggregate')
+            ->groupBy('state')
+            ->pluck('aggregate', 'state')
+            ->mapWithKeys(fn (mixed $count, mixed $state): array => [(int) $state => (int) $count]);
 
         $labels = [];
         $values = [];

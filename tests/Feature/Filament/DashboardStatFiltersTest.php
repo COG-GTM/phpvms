@@ -278,3 +278,21 @@ test('the state chart plots states that never reach filing', function (): void {
         // labels are positional, so the counts line up state-for-state
         ->assertSeeHtml('&quot;values&quot;:[1,0,1,0,0,0,0]');
 });
+
+test('the state chart counts each state once per pirep and skips deleted ones', function (): void {
+    Pirep::factory()->count(3)->create([
+        'state'          => PirepState::ACCEPTED,
+        'block_off_time' => now()->subHours(2),
+    ]);
+    Pirep::factory()->count(2)->create([
+        'state'          => PirepState::PENDING,
+        'block_off_time' => now()->subHours(2),
+    ]);
+    Pirep::factory()->create([
+        'state'          => PirepState::REJECTED,
+        'block_off_time' => now()->subHours(2),
+    ])->delete();
+
+    livewire(PirepStateChart::class)
+        ->assertSeeHtml('&quot;values&quot;:[0,2,3,0,0,0,0]');
+});
